@@ -13,6 +13,7 @@ import openfl.display.StageScaleMode;
 import lime.system.System as LimeSystem;
 #if mobile
 import mobile.CopyState;
+import mobile.MobileScaleMode
 #end
 
 #if windows
@@ -105,17 +106,17 @@ class Main extends Sprite
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
-		if (game.zoom == -1.0)
+		if (zoom == -1)
 		{
-			var ratioX:Float = stageWidth / game.width;
-			var ratioY:Float = stageHeight / game.height;
-			game.zoom = Math.min(ratioX, ratioY);
-			game.width = Math.ceil(stageWidth / game.zoom);
-			game.height = Math.ceil(stageHeight / game.zoom);
+			var ratioX:Float = stageWidth / gameWidth;
+			var ratioY:Float = stageHeight / gameHeight;
+			zoom = Math.min(ratioX, ratioY);
+			gameWidth = Math.ceil(stageWidth / zoom);
+			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 		#else
-		if (game.zoom == -1.0)
-			game.zoom = 1.0;
+		if (zoom == -1)
+			zoom = 1;
 		#end
 	
 		ClientPrefs.loadDefaultKeys();
