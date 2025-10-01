@@ -1,5 +1,6 @@
 package mobile.options;
 
+import mobile.backend.MobileScaleMode;
 import flixel.input.keyboard.FlxKey;
 import options.BaseOptionsMenu;
 import options.Option;
@@ -15,7 +16,6 @@ class MobileOptionsSubState extends BaseOptionsMenu
 
     public function new()
     {
-        super(); // ✅ must be at the top of constructor
 
         title = 'Mobile Options';
         rpcTitle = 'Mobile Options Menu'; // for Discord Rich Presence
@@ -52,6 +52,8 @@ class MobileOptionsSubState extends BaseOptionsMenu
             option = new Option('Hitbox Position', 'If checked, the hitbox will be put at the bottom of the screen, otherwise will stay at the top.',
                 'hitboxPos', 'bool', true);
             addOption(option);
+
+            super();
         }
     }
 }
