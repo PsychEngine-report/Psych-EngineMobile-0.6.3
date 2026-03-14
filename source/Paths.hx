@@ -311,7 +311,7 @@ class Paths
 			return true;
 		}
 
-		#if (android || linux)
+		#if (android || linux || ios)
 		if (FileSystem.exists(findFile(key)))
 			return true;
 		#end
@@ -392,6 +392,17 @@ class Paths
 		#end
 
 		var path = getPath('images/$key.png', IMAGE, library);
+
+		// Mobile/Linux case-insensitive fallback
+		#if (android || linux || ios)
+		if (!OpenFlAssets.exists(path, IMAGE))
+		{
+			var alt:String = findFile('images/$key.png');
+			if (alt != null)
+				path = alt;
+		}	
+		#end
+
 		// trace(path);
 		if (OpenFlAssets.exists(path, IMAGE))
 		{
@@ -523,7 +534,7 @@ class Paths
 			var fileToCheck:String = mods(mod + '/' + key);
 			if (FileSystem.exists(fileToCheck))
 				return fileToCheck;
-			#if (linux || android)
+			#if (linux || android || ios)
 			else
 			{
 				var newPath:String = findFile(key);
@@ -535,7 +546,7 @@ class Paths
 		return #if mobile Sys.getCwd() + #end 'mods/' + key;
 	}
 
-	#if (android || linux)
+	#if (android || linux || ios)
 	static function findFile(key:String):String {
 		var targetParts:Array<String> = key.replace('\\', '/').split('/');
 		if (targetParts.length == 0) return null;
