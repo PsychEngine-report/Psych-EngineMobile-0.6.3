@@ -519,7 +519,7 @@ class Paths
 			var fileToCheck:String = mods(currentModDirectory + '/' + key);
 			if (FileSystem.exists(fileToCheck))
 				return fileToCheck;
-			#if (linux || android)
+			#if (linux || android || ios)
 			else
 			{
 				var newPath:String = findFile(key);
