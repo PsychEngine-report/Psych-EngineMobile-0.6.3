@@ -9,6 +9,7 @@ import haxe.xml.Access;
 import openfl.system.System;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
+import openfl.display.BitmapData;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import lime.utils.Assets;
@@ -367,59 +368,163 @@ class Paths
 		return hideChars.split(path).join("").toLowerCase();
 	}
 
+	static var lastImageErrorFile:String = null;
+
 	// completely rewritten asset loading? fuck!
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-
-	public static function returnGraphic(key:String, ?library:String)
+	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic
 	{
+		var bitmap:BitmapData = null;
+		var file:String = null;
+
 		#if MODS_ALLOWED
-		var modKey:String = modsImages(key);
-		if (FileSystem.exists(modKey))
+		file = modsImages(key);
+		if (currentTrackedAssets.exists(file))
 		{
-			if (!currentTrackedAssets.exists(modKey))
-			{
-				var newBitmap:BitmapData = BitmapData.fromFile(modKey);
-				var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(newBitmap, false, modKey);
-				if (newGraphic != null)
-					newGraphic.persist = true;
-				else
-					trace('smth up with the graphic ($key)');
-				currentTrackedAssets.set(modKey, newGraphic);
-			}
-			localTrackedAssets.push(modKey);
-			return currentTrackedAssets.get(modKey);
+			localTrackedAssets.push(file);
+			return currentTrackedAssets.get(file);
 		}
+		else if (FileSystem.exists(file))
+			bitmap = BitmapData.fromFile(file);
+		else
 		#end
-
-		var path = getPath('images/$key.png', IMAGE, library);
-
-		// Mobile/Linux case-insensitive fallback
-		#if (android || linux || ios)
-		if (!OpenFlAssets.exists(path, IMAGE))
 		{
-			var alt:String = findFile('images/$key.png');
-			if (alt != null)
-				path = alt;
-		}	
-		#end
-
-		// trace(path);
-		if (OpenFlAssets.exists(path, IMAGE))
-		{
-			if (!currentTrackedAssets.exists(path))
+			file = getPath('images/$key.dds', BINARY, library);
+			if (currentTrackedAssets.exists(file))
 			{
-				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
-				if (newGraphic != null)
-					newGraphic.persist = true;
-				else
-					trace('smth up with the graphic ($key)');
-				currentTrackedAssets.set(path, newGraphic);
+				localTrackedAssets.push(file);
+				return currentTrackedAssets.get(file);
 			}
-			localTrackedAssets.push(path);
-			return currentTrackedAssets.get(path);
+			else if (OpenFlAssets.exists(file, BINARY)) 
+			{
+				bitmap = OpenFlAssets.getBitmapData(file);
+			}
+			else
+			{
+			file = getPath('images/$key.astc', BINARY, library);
+			if (currentTrackedAssets.exists(file))
+			{
+				localTrackedAssets.push(file);
+				return currentTrackedAssets.get(file);
+			}
+			else if (OpenFlAssets.exists(file, BINARY)) 
+			{
+				bitmap = OpenFlAssets.getBitmapData(file);
+			}
+			else
+			{
+            file = getPath('images/$key.png', IMAGE, library);
+            if (currentTrackedAssets.exists(file))
+            {
+                localTrackedAssets.push(file);
+                return currentTrackedAssets.get(file);
+            }
+            else if (OpenFlAssets.exists(file, IMAGE))
+            {
+                bitmap = OpenFlAssets.getBitmapData(file);
+            }
+        }
+    	}
 		}
-		trace('oh no its returning null NOOOO ($key)');
+
+		if (bitmap != null)
+		{
+			localTrackedAssets.push(file);
+			// if (allowGPU /*&& ClientPrefs.data.cacheOnGPU*/)
+			// {
+			// 	var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
+			// 	texture.uploadFromBitmapData(bitmap);
+			// 	bitmap.image.data = null;
+			// 	bitmap.dispose();
+			// 	bitmap.disposeImage();
+			// 	bitmap = BitmapData.fromTexture(texture);
+			// }
+			var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
+			newGraphic.persist = true;
+			newGraphic.destroyOnNoUse = false;
+			currentTrackedAssets.set(file, newGraphic);
+			return newGraphic;
+		}
+
+		//STOP FUCKING USING TRACE ITS CPU HEAVY
+		if (lastImageErrorFile != file && ClientPrefs.isDebug()) {
+			Sys.println('Paths.image(): oh no its returning null NOOOO ($file)');
+			lastImageErrorFile = file;
+		}
 		return null;
+	}
+
+	static public function asyncBitmap(key:String, ?library:String = null, ?modDir:String):Null<Future<BitmapData>> {
+        var file:String = null;
+		var bitmap:BitmapData = null;
+
+		#if MODS_ALLOWED
+		file = modsImages(key);
+		if (currentTrackedAssets.exists(file))
+		{
+			localTrackedAssets.push(file);
+			return Future.withValue(currentTrackedAssets.get(file).bitmap);
+		}
+		else if (FileSystem.exists(file))
+			return BitmapData.loadFromFile(file);
+		else
+		#end
+		{
+			file = getPath('images/$key.dds', BINARY, library);
+			if (currentTrackedAssets.exists(file))
+			{
+				localTrackedAssets.push(file);
+				return Future.withValue(currentTrackedAssets.get(file).bitmap);
+			}
+			else if (OpenFlAssets.exists(file, BINARY))
+				return OpenFlAssets.loadBitmapData(file);
+			else
+			{
+				file = getPath('images/$key.astc', BINARY, library);
+				if (currentTrackedAssets.exists(file))
+				{
+					localTrackedAssets.push(file);
+					return Future.withValue(currentTrackedAssets.get(file).bitmap);
+				}
+				else if (OpenFlAssets.exists(file, BINARY))
+					return OpenFlAssets.loadBitmapData(file);
+				else
+				{
+					file = getPath('images/$key.png', IMAGE, library);
+					if (currentTrackedAssets.exists(file))
+					{
+						localTrackedAssets.push(file);
+						return Future.withValue(currentTrackedAssets.get(file).bitmap);
+					}
+					else if (OpenFlAssets.exists(file, IMAGE))
+						return OpenFlAssets.loadBitmapData(file);
+				}
+			}
+		}
+
+        if (lastImageErrorFile != file && ClientPrefs.isDebug()) {
+            Sys.println('Paths.asyncBitmap(): Could not start async task for ($file)');
+            lastImageErrorFile = file;
+        }
+        return null;
+    }
+
+	static public function bitmapToGraphic(file:String, bitmap:BitmapData) {
+		localTrackedAssets.push(file);
+		// if (allowGPU /*&& ClientPrefs.data.cacheOnGPU*/)
+		// {
+		// 	var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
+		// 	texture.uploadFromBitmapData(bitmap);
+		// 	bitmap.image.data = null;
+		// 	bitmap.dispose();
+		// 	bitmap.disposeImage();
+		// 	bitmap = BitmapData.fromTexture(texture);
+		// }
+		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
+		newGraphic.persist = true;
+		newGraphic.destroyOnNoUse = false;
+		currentTrackedAssets.set(file, newGraphic);
+		return newGraphic;
 	}
 
 	public static var currentTrackedSounds:Map<String, Sound> = [];
@@ -484,8 +589,11 @@ class Paths
 		return modFolders(path + '/' + key + '.' + SOUND_EXT);
 	}
 
-	inline static public function modsImages(key:String)
-	{
+	inline static public function modsImages(key:String) {
+		var astcCheck:String = modFolders('images/' + key + '.astc');
+		if (FileSystem.exists(astcCheck)) {
+			return astcCheck;
+		}
 		return modFolders('images/' + key + '.png');
 	}
 
