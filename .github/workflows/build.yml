@@ -34,41 +34,38 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Haxe
-        if: inputs.name == 'Android'
+        if: (inputs.name == 'Android-PNG' || inputs.name == 'Android-ASTC')
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
       - name: Setup Haxe
-        if: inputs.name == 'iOS'
+        if: (inputs.name == 'iOS-PNG' || inputs.name == 'iOS-ASTC')
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
       - name: Restore existing build cache for faster compilation
-        if: inputs.name == 'iOS'
         uses: actions/cache@v4
         with:
           # not caching the bin folder to prevent asset duplication and stuff like that
-          key: cache-build-ios
+          key: cache-build-${{ inputs.name }}
           path: |
+            ~/.gradle
             .haxelib/
-            export/release/ios/PsychEngine/haxe/
-          restore-keys: |
-            cache-build-ios
-
-      - name: Restore existing build cache for faster compilation
-        if: inputs.name == 'Android'
-        uses: actions/cache@v4
-        with:
-          # not caching the bin folder to prevent asset duplication and stuff like that
-          key: cache-build-android
-          path: |
-            .haxelib/
+            /home/runner/haxelib/
+            /Users/runner/haxelib/
+            C:/hostedtoolcache/windows/haxe/4.3.6/x64/lib/
+            ~/.haxelib/
             export/release/android/haxe/
             export/release/android/obj/
+            export/release/ios/${{ env.PROJECT_NAME }}/haxe/
+            export/release/ios/${{ env.PROJECT_NAME }}/obj/
+            export\release\windows\haxe\
+            export\release\windows\obj\
+            .haxelib\
           restore-keys: |
-            cache-build-android
+            cache-build-${{ inputs.name }}
 
       - name: Install libVLC
         if: inputs.name == 'Linux'
@@ -92,7 +89,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-ios") {
+              if (cache.key == "cache-build-${{ inputs.name }}") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -102,42 +99,9 @@ jobs:
                 console.log("Cache cleared.")
               }
             }
-      - name: Clearing already existing cache
-        if: inputs.name == 'Android'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-android") {
-                console.log('Clearing ' + cache.key + '...')
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-                console.log("Cache cleared.")
-              }
-            }
-
-      - name: Uploading new cache
-        if: inputs.name == 'Android'
-        uses: actions/cache@v4
-        with:
-          # caching again since for some reason it doesnt work with the first post cache shit
-          key: cache-build-android
-          path: |
-            .haxelib/
-            export/release/android/haxe/
-            export/release/android/obj/
-          restore-keys: |
-            cache-build-android
 
       - name: Setup Android NDK
-        if: inputs.name == 'Android'
+        if: (inputs.name == 'Android-PNG' || inputs.name == 'Android-ASTC')
         id: setup-ndk
         uses: nttld/setup-ndk@main
         with:
@@ -156,7 +120,7 @@ jobs:
         run: haxelib run lime build ${{ inputs.buildArgs }}
 
       - name: Make IPA
-        if: inputs.name == 'iOS'
+        if: (inputs.name == 'iOS-PNG' || inputs.name == 'iOS-ASTC')
         run: |
           brew install ldid
           cd export/release/ios/build/Release-iphoneos/PsychEngine.app
@@ -173,13 +137,23 @@ jobs:
           path: ${{ inputs.artifactPath }}
 
       - name: Uploading new cache
-        if: inputs.name == 'iOS'
         uses: actions/cache@v4
         with:
           # caching again since for some reason it doesnt work with the first post cache shit
-          key: cache-build-ios
+          key: cache-build-${{ inputs.name }}
           path: |
+            ~/.gradle
             .haxelib/
-            export/release/ios/PsychEngine/haxe/
+            /home/runner/haxelib/
+            /Users/runner/haxelib/
+            C:/hostedtoolcache/windows/haxe/4.3.6/x64/lib/
+            ~/.haxelib/
+            export/release/android/haxe/
+            export/release/android/obj/
+            export/release/ios/${{ env.PROJECT_NAME }}/haxe/
+            export/release/ios/${{ env.PROJECT_NAME }}/obj/
+            export\release\windows\haxe\
+            export\release\windows\obj\
+            .haxelib\
           restore-keys: |
-            cache-build-ios
+            cache-build-${{ inputs.name }}
