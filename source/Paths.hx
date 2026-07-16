@@ -1,5 +1,6 @@
 package;
 
+import openfl.utils.Future;
 import animateatlas.AtlasFrameMaker;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
@@ -368,164 +369,83 @@ class Paths
 		return hideChars.split(path).join("").toLowerCase();
 	}
 
-	static var lastImageErrorFile:String = null;
-
-	// completely rewritten asset loading? fuck!
-	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic
-	{
-		var bitmap:BitmapData = null;
-		var file:String = null;
-
-		#if MODS_ALLOWED
-		file = modsImages(key);
-		if (currentTrackedAssets.exists(file))
-		{
-			localTrackedAssets.push(file);
-			return currentTrackedAssets.get(file);
-		}
-		else if (FileSystem.exists(file))
-			bitmap = BitmapData.fromFile(file);
-		else
-		#end
-		{
-			file = getPath('images/$key.dds', BINARY, library);
-			if (currentTrackedAssets.exists(file))
-			{
-				localTrackedAssets.push(file);
-				return currentTrackedAssets.get(file);
-			}
-			else if (OpenFlAssets.exists(file, BINARY)) 
-			{
-				bitmap = OpenFlAssets.getBitmapData(file);
-			}
-			else
-			{
-			file = getPath('images/$key.astc', BINARY, library);
-			if (currentTrackedAssets.exists(file))
-			{
-				localTrackedAssets.push(file);
-				return currentTrackedAssets.get(file);
-			}
-			else if (OpenFlAssets.exists(file, BINARY)) 
-			{
-				bitmap = OpenFlAssets.getBitmapData(file);
-			}
-			else
-			{
-            file = getPath('images/$key.png', IMAGE, library);
-            if (currentTrackedAssets.exists(file))
-            {
-                localTrackedAssets.push(file);
-                return currentTrackedAssets.get(file);
+	 public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
+	public static function returnGraphic(key:String, ?library:String) {
+        #if MODS_ALLOWED
+        var modKey:String = modsImages(key);
+        if(FileSystem.exists(modKey)) {
+            if(!currentTrackedAssets.exists(modKey)) {
+                var newBitmap:BitmapData = openfl.display.BitmapData.fromFile(modKey);
+                if (newBitmap != null) {
+                    var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(newBitmap, false, modKey);
+                    newGraphic.persist = true;
+                    currentTrackedAssets.set(modKey, newGraphic);
+                }
             }
-            else if (OpenFlAssets.exists(file, IMAGE))
-            {
-                bitmap = OpenFlAssets.getBitmapData(file);
-            }
+            localTrackedAssets.push(modKey);
+            return currentTrackedAssets.get(modKey);
         }
-    	}
-		}
+        #end
 
-		if (bitmap != null)
-		{
-			localTrackedAssets.push(file);
-			// if (allowGPU /*&& ClientPrefs.data.cacheOnGPU*/)
-			// {
-			// 	var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
-			// 	texture.uploadFromBitmapData(bitmap);
-			// 	bitmap.image.data = null;
-			// 	bitmap.dispose();
-			// 	bitmap.disposeImage();
-			// 	bitmap = BitmapData.fromTexture(texture);
-			// }
-			var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
-			newGraphic.persist = true;
-			newGraphic.destroyOnNoUse = false;
-			currentTrackedAssets.set(file, newGraphic);
-			return newGraphic;
-		}
+        var cleanKey:String = key;
+        if (cleanKey.startsWith("assets/")) cleanKey = cleanKey.substring(7);
+        if (library != null && cleanKey.startsWith(library + "/")) cleanKey = cleanKey.substring(library.length + 1);
 
-		//STOP FUCKING USING TRACE ITS CPU HEAVY
-		if (lastImageErrorFile != file && ClientPrefs.isDebug()) {
-			Sys.println('Paths.image(): oh no its returning null NOOOO ($file)');
-			lastImageErrorFile = file;
-		}
-		return null;
-	}
+        var astcPath = getPath('images/$cleanKey.astc', BINARY, library);
+        var pngPath  = getPath('images/$cleanKey.png', IMAGE, library);
+        var normalAstcPath = getPath('$cleanKey.astc', BINARY, library);
+        var normalPngPath  = getPath('$cleanKey.png', IMAGE, library);
 
-	static public function asyncBitmap(key:String, ?library:String = null, ?modDir:String):Null<Future<BitmapData>> {
-        var file:String = null;
-		var bitmap:BitmapData = null;
+        var defaultAstcPath = getPreloadPath('images/$cleanKey.astc');
+        var defaultPngPath  = getPreloadPath('images/$cleanKey.png');
+        var defaultNormalAstcPath = getPreloadPath('$cleanKey.astc');
+        var defaultNormalPngPath  = getPreloadPath('$cleanKey.png');
 
-		#if MODS_ALLOWED
-		file = modsImages(key);
-		if (currentTrackedAssets.exists(file))
-		{
-			localTrackedAssets.push(file);
-			return Future.withValue(currentTrackedAssets.get(file).bitmap);
-		}
-		else if (FileSystem.exists(file))
-			return BitmapData.loadFromFile(file);
-		else
-		#end
-		{
-			file = getPath('images/$key.dds', BINARY, library);
-			if (currentTrackedAssets.exists(file))
-			{
-				localTrackedAssets.push(file);
-				return Future.withValue(currentTrackedAssets.get(file).bitmap);
-			}
-			else if (OpenFlAssets.exists(file, BINARY))
-				return OpenFlAssets.loadBitmapData(file);
-			else
-			{
-				file = getPath('images/$key.astc', BINARY, library);
-				if (currentTrackedAssets.exists(file))
-				{
-					localTrackedAssets.push(file);
-					return Future.withValue(currentTrackedAssets.get(file).bitmap);
-				}
-				else if (OpenFlAssets.exists(file, BINARY))
-					return OpenFlAssets.loadBitmapData(file);
-				else
-				{
-					file = getPath('images/$key.png', IMAGE, library);
-					if (currentTrackedAssets.exists(file))
-					{
-						localTrackedAssets.push(file);
-						return Future.withValue(currentTrackedAssets.get(file).bitmap);
-					}
-					else if (OpenFlAssets.exists(file, IMAGE))
-						return OpenFlAssets.loadBitmapData(file);
-				}
-			}
-		}
+        if (OpenFlAssets.exists(pngPath, IMAGE)) return createFlxGraphic(pngPath, IMAGE);
+        if (OpenFlAssets.exists(normalPngPath, IMAGE)) return createFlxGraphic(normalPngPath, IMAGE);
 
-        if (lastImageErrorFile != file && ClientPrefs.isDebug()) {
-            Sys.println('Paths.asyncBitmap(): Could not start async task for ($file)');
-            lastImageErrorFile = file;
-        }
+        if (OpenFlAssets.exists(defaultPngPath, IMAGE)) return createFlxGraphic(defaultPngPath, IMAGE);
+        if (OpenFlAssets.exists(defaultNormalPngPath, IMAGE)) return createFlxGraphic(defaultNormalPngPath, IMAGE);
+
+        if (OpenFlAssets.exists(astcPath, BINARY)) return createFlxGraphic(astcPath, BINARY);
+        if (OpenFlAssets.exists(normalAstcPath, BINARY)) return createFlxGraphic(normalAstcPath, BINARY);
+
+        if (OpenFlAssets.exists(defaultAstcPath, BINARY)) return createFlxGraphic(defaultAstcPath, BINARY);
+        if (OpenFlAssets.exists(defaultNormalAstcPath, BINARY)) return createFlxGraphic(defaultNormalAstcPath, BINARY);
+        
+        trace('Asset totally missing - Clean Key: ' + cleanKey + ' (Orig: ' + key + ', Library: ' + library + ')');
         return null;
     }
 
-	static public function bitmapToGraphic(file:String, bitmap:BitmapData) {
-		localTrackedAssets.push(file);
-		// if (allowGPU /*&& ClientPrefs.data.cacheOnGPU*/)
-		// {
-		// 	var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
-		// 	texture.uploadFromBitmapData(bitmap);
-		// 	bitmap.image.data = null;
-		// 	bitmap.dispose();
-		// 	bitmap.disposeImage();
-		// 	bitmap = BitmapData.fromTexture(texture);
-		// }
-		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
-		newGraphic.persist = true;
-		newGraphic.destroyOnNoUse = false;
-		currentTrackedAssets.set(file, newGraphic);
-		return newGraphic;
-	}
+    private static function createFlxGraphic(path:String, type:openfl.utils.AssetType):FlxGraphic {
+    if(!currentTrackedAssets.exists(path)) {
+        var assetBitmap:BitmapData = null;
+
+        if (type == BINARY && haxe.io.Path.extension(path) == 'astc') {
+            try {
+                var bytes = OpenFlAssets.getBytes(path);
+                if (bytes != null) {
+                    var texture = openfl.Lib.current.stage.context3D.createASTCTexture(bytes);
+                    assetBitmap = BitmapData.fromTexture(texture);
+                }
+            } catch(e:Dynamic) {
+                trace('Failed loading hardware ASTC texture: ' + e);
+            }
+        } else {
+            assetBitmap = OpenFlAssets.getBitmapData(path, false);
+        }
+
+        if (assetBitmap != null) {
+            var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(assetBitmap, false, path);
+            newGraphic.persist = true;
+            currentTrackedAssets.set(path, newGraphic);
+        } else {
+            trace('BitmapData returned null for path: ' + path);
+        }
+    }
+    localTrackedAssets.push(path);
+    return currentTrackedAssets.get(path);
+    }
 
 	public static var currentTrackedSounds:Map<String, Sound> = [];
 
