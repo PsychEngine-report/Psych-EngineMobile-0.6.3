@@ -36,7 +36,7 @@ class Main extends Sprite {
 
 		var animationData:AnimationData = Json.parse(Assets.getText("assets/TEST/Animation.json"));
 		var atlasData:AtlasData = Json.parse(Assets.getText("assets/TEST/spritemap.json"));
-		var bitmapData:BitmapData = Assets.getBitmapData("assets/TEST/spritemap.png");
+		var bitmapData:BitmapData = Assets.getBitmapData("assets/TEST/spritemap.png") || Assets.getBitmapData("assets/TEST/spritemap.astc");
 
 		aa = new TileAnimationLibrary(animationData, atlasData, bitmapData);
 		ss = new SpriteAnimationLibrary(animationData, atlasData, bitmapData);

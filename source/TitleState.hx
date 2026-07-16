@@ -338,17 +338,17 @@ class TitleState extends MusicBeatState
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
 		#if MODS_ALLOWED
-		var path = #if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + "/images/titleEnter.png";
+		var path = #if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + ("/images/titleEnter.png" || "/images/titleEnter.astc");
 		//trace(path, FileSystem.exists(path));
 		if (!FileSystem.exists(path)){
-			path = #if mobile Sys.getCwd() + #end "mods/images/titleEnter.png";
+			path = #if mobile Sys.getCwd() + #end ("mods/images/titleEnter.png" || "mods/images/titleEnter.astc");
 		}
 		//trace(path, FileSystem.exists(path));
 		if (!FileSystem.exists(path)){
-			path = #if mobile Sys.getCwd() + #end "assets/images/titleEnter.png";
+			path = #if mobile Sys.getCwd() + #end ("assets/images/titleEnter.png" || "assets/images/titleEnter.astc");
 		}
 		//trace(path, FileSystem.exists(path));
-		titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path),File.getContent(StringTools.replace(path,".png",".xml")));
+		titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path),File.getContent(StringTools.replace(path,".png",".xml") || StringTools.replace(path,".astc",".xml")));
 		#else
 
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');

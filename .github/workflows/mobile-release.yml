@@ -37,15 +37,25 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: Android
+          - name: Android-PNG
             os: ubuntu-22.04
             buildArgs: "android -final -D officialBuild"
-            artifactName: androidBuild
+            artifactName: androidBuild-PNG
             artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*.apk"
-          - name: iOS
+          - name: Android-ASTC
+            os: ubuntu-22.04
+            buildArgs: "android -final -D officialBuild -D USING_GPU_TEXTURES"
+            artifactName: androidBuild-ASTC
+            artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*.apk"
+          - name: iOS-PNG
             os: macos-15
             buildArgs: "ios -final -nosign -D officialBuild"
-            artifactName: iOSBuild
+            artifactName: iOSBuild-PNG
+            artifactPath: "export/release/ios/build/Release-iphoneos/PsychEngine.ipa"
+          - name: iOS-ASTC
+            os: macos-15
+            buildArgs: "ios -final -nosign -D officialBuild -D USING_GPU_TEXTURES"
+            artifactName: iOSBuild-ASTC
             artifactPath: "export/release/ios/build/Release-iphoneos/PsychEngine.ipa"
     uses: ./.github/workflows/build.yml
     with:
@@ -63,20 +73,38 @@ jobs:
       - name: Download Android Build
         uses: actions/download-artifact@main
         with:
-           name: androidBuild
+           name: androidBuild-PNG
            path: /home/runner
 
       - name: Move Android File
-        run: mv /home/runner/${{ env.PROJECT_NAME }}-release.apk /home/runner/${{ env.PROJECT_NAME }}-Android.apk
+        run: mv /home/runner/${{ env.PROJECT_NAME }}-release.apk /home/runner/${{ env.PROJECT_NAME }}-png.apk
 
       - name: Download iOS Build
         uses: actions/download-artifact@main
         with:
-           name: iOSBuild
+           name: iOSBuild-PNG
            path: ${{ github.workspace }}
 
       - name: Move iOS File
-        run: mv ${{ github.workspace }}/${{ env.PROJECT_NAME }}.ipa /home/runner/${{ env.PROJECT_NAME }}.ipa
+        run: mv ${{ github.workspace }}/${{ env.PROJECT_NAME }}.ipa /home/runner/${{ env.PROJECT_NAME }}-png.ipa
+
+      - name: Download Android Build
+        uses: actions/download-artifact@main
+        with:
+           name: androidBuild-ASTC
+           path: /home/runner
+
+      - name: Move Android File
+        run: mv /home/runner/${{ env.PROJECT_NAME }}-release.apk /home/runner/${{ env.PROJECT_NAME }}-Android-astc.apk
+
+      - name: Download iOS Build
+        uses: actions/download-artifact@main
+        with:
+           name: iOSBuild-ASTC
+           path: ${{ github.workspace }}
+
+      - name: Move iOS File
+        run: mv ${{ github.workspace }}/${{ env.PROJECT_NAME }}.ipa /home/runner/${{ env.PROJECT_NAME }}-astc.ipa
 
       - name: Publish The Release
         uses: softprops/action-gh-release@v2
@@ -85,5 +113,7 @@ jobs:
           tag_name: "release-${{ needs.get-commit-hash.outputs.commit_hash }}"
           make_latest: true
           files: |
-            /home/runner/*.apk
-            /home/runner/*.ipa
+            /home/runner/PsychEngine-png.apk
+            /home/runner/PsychEngine-png.ipa
+            /home/runner/PsychEngine-astc.apk
+            /home/runner/PsychEngine-astc.ipa

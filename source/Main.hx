@@ -11,9 +11,6 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.system.System as LimeSystem;
-#if mobile
-import mobile.CopyState;
-#end
 
 #if windows
 @:buildXml('
@@ -122,7 +119,7 @@ class Main extends Sprite
 		addChild(new FlxGame(
         Std.int(gameWidth),
         Std.int(gameHeight),
-        #if (mobile && MODS_ALLOWED) !CopyState.checkExistingFiles() ? CopyState : #end initialState,
+        initialState,
         zoom,
         Std.int(framerate),
         Std.int(framerate),
