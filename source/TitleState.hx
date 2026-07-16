@@ -337,19 +337,34 @@ class TitleState extends MusicBeatState
 		logoBl.shader = swagShader.shader;
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
-		#if MODS_ALLOWED
-		var path = #if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + "/images/titleEnter.png" || "/images/titleEnter.astc";
-		//trace(path, FileSystem.exists(path));
-		if (!FileSystem.exists(path)){
-			path = #if mobile Sys.getCwd() + #end "mods/images/titleEnter.png" || "mods/images/titleEnter.astc";
-		}
-		//trace(path, FileSystem.exists(path));
-		if (!FileSystem.exists(path)){
-			path = #if mobile Sys.getCwd() + #end "assets/images/titleEnter.png" || "assets/images/titleEnter.astc";
-		}
-		//trace(path, FileSystem.exists(path));
-		titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path),File.getContent(StringTools.replace(path,".png",".xml") || StringTools.replace(path,".astc",".xml")));
-		#else
+        #if MODS_ALLOWED
+        var baseDir = #if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + "/";
+        var path = baseDir + "images/titleEnter.png";
+        if (!FileSystem.exists(path)) {
+            path = baseDir + "images/titleEnter.astc";
+        }
+
+        if (!FileSystem.exists(path)) {
+            path = #if mobile Sys.getCwd() + #end "mods/images/titleEnter.png";
+            if (!FileSystem.exists(path)) {
+                path = #if mobile Sys.getCwd() + #end "mods/images/titleEnter.astc";
+            }
+        }
+
+        if (!FileSystem.exists(path)) {
+            path = #if mobile Sys.getCwd() + #end "assets/images/titleEnter.png";
+            if (!FileSystem.exists(path)) {
+                path = #if mobile Sys.getCwd() + #end "assets/images/titleEnter.astc";
+            }
+        }
+
+        var xmlPath = StringTools.replace(path, ".png", ".xml");
+        if (path.endsWith(".astc")) {
+            xmlPath = StringTools.replace(path, ".astc", ".xml");
+        }
+
+        titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path), File.getContent(xmlPath));
+        #else
 
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
 		#end
