@@ -14,8 +14,8 @@ import haxe.Json;
 import haxe.format.JsonParser;
 import Alphabet;
 #if sys
-import sys.FileSystem;
-import sys.io.File;
+import import funk.PsychFileSystem as FileSystem;
+import import funk.PsychFile as File;
 #end
 import openfl.utils.Assets;
 

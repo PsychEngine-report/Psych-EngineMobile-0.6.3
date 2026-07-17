@@ -29,8 +29,8 @@ import openfl.utils.Assets;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSave;
 #if sys
-import sys.io.File;
-import sys.FileSystem;
+import funk.PsychFile as File;
+import funk.PsychFileSystem as FileSystem;
 #end
 
 using StringTools;

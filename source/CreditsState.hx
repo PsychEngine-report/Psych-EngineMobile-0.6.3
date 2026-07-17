@@ -14,8 +14,8 @@ import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 #if MODS_ALLOWED
-import sys.FileSystem;
-import sys.io.File;
+import import funk.PsychFileSystem as FileSystem;
+import import funk.PsychFile as File;
 #end
 import lime.utils.Assets;
 

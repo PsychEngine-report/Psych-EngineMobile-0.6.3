@@ -29,8 +29,8 @@ import openfl.net.FileFilter;
 import lime.system.Clipboard;
 import haxe.Json;
 #if sys
-import sys.io.File;
-import sys.FileSystem;
+import funk.PsychFile as File;
+import funk.PsychFileSystem as FileSystem;
 #end
 import WeekData;
 

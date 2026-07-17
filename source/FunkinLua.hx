@@ -39,8 +39,8 @@ import flixel.addons.display.FlxRuntimeShader;
 #end
 
 #if sys
-import sys.FileSystem;
-import sys.io.File;
+import import funk.PsychFileSystem as FileSystem;
+import import funk.PsychFile as File;
 #end
 
 import Type.ValueType;

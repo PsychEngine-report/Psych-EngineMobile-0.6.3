@@ -31,7 +31,7 @@ import flixel.group.FlxSpriteGroup;
 import lime.system.Clipboard;
 import Alphabet;
 #if sys
-import sys.io.File;
+import import funk.PsychFile as File;;
 #end
 
 using StringTools;

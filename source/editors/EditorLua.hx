@@ -20,8 +20,8 @@ import flixel.FlxCamera;
 import flixel.util.FlxColor;
 import flixel.FlxBasic;
 #if sys
-import sys.FileSystem;
-import sys.io.File;
+import import funk.PsychFileSystem as FileSystem;;
+import import funk.PsychFile as File;;
 #end
 import Type.ValueType;
 import Controls;

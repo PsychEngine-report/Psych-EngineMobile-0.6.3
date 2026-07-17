@@ -16,8 +16,8 @@ import haxe.Json;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 #if MODS_ALLOWED
-import sys.FileSystem;
-import sys.io.File;
+import import funk.PsychFileSystem as FileSystem;
+import import funk.PsychFile as File;
 #end
 import options.GraphicsSettingsSubState;
 //import flixel.graphics.FlxGraphic;
@@ -100,11 +100,11 @@ class TitleState extends MusicBeatState
 		//trace(path, FileSystem.exists(path));
 
 		/*#if (polymod && !html5)
-		if (sys.FileSystem.exists('mods/')) {
+		if (import funk.PsychFileSystem as FileSystem;.exists('mods/')) {
 			var folders:Array<String> = [];
 			for (file in sys.Paths.readDirectory('mods/')) {
 				var path = haxe.io.Path.join(['mods/', file]);
-				if (sys.FileSystem.isDirectory(path)) {
+				if (import funk.PsychFileSystem as FileSystem;.isDirectory(path)) {
 					folders.push(file);
 				}
 			}

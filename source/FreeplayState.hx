@@ -19,7 +19,7 @@ import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import WeekData;
 #if MODS_ALLOWED
-import sys.FileSystem;
+import import funk.PsychFileSystem as FileSystem;
 #end
 
 using StringTools;
@@ -367,7 +367,7 @@ class FreeplayState extends MusicBeatState
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 			/*#if MODS_ALLOWED
-			if(!sys.FileSystem.exists(Paths.modsJson(songLowercase + '/' + poop)) && !sys.FileSystem.exists(Paths.json(songLowercase + '/' + poop))) {
+			if(!import funk.PsychFileSystem as FileSystem;.exists(Paths.modsJson(songLowercase + '/' + poop)) && !import funk.PsychFileSystem as FileSystem;.exists(Paths.json(songLowercase + '/' + poop))) {
 			#else
 			if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
 			#end

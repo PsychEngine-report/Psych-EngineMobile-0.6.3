@@ -27,7 +27,7 @@ import openfl.events.IOErrorEvent;
 import openfl.net.FileFilter;
 import haxe.Json;
 #if sys
-import sys.io.File;
+import import funk.PsychFile as File;;
 #end
 
 using StringTools;

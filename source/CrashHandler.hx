@@ -4,8 +4,8 @@ import openfl.events.UncaughtErrorEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
 #if sys
-import sys.FileSystem;
-import sys.io.File;
+import import funk.PsychFileSystem as FileSystem;
+import import funk.PsychFile as File;
 #end
 
 using StringTools;

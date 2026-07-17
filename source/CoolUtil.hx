@@ -8,8 +8,8 @@ import lime.utils.AssetManifest;
 import flixel.util.FlxColor;
 import flixel.system.FlxSound;
 #if sys
-import sys.io.File;
-import sys.FileSystem;
+import funk.PsychFile as File;
+import funk.PsychFileSystem as FileSystem;
 #else
 import openfl.utils.Assets;
 #end

@@ -1,8 +1,8 @@
 package;
 
 #if MODS_ALLOWED
-import sys.io.File;
-import sys.FileSystem;
+import funk.PsychFile as File;
+import funk.PsychFileSystem as FileSystem;
 #else
 import openfl.utils.Assets;
 #end
