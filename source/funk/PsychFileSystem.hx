@@ -3,7 +3,7 @@ package funk;
 import openfl.Assets;
 import mobile.backend.StorageUtil;
 #if sys
-import import funk.PsychFileSystem as FileSystem;;
+import sys.FileSystem;
 import sys.FileStat;
 #end
 

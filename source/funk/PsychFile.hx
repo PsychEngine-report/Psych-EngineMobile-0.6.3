@@ -3,11 +3,11 @@ package funk;
 import openfl.Assets;
 import mobile.backend.StorageUtil;
 #if sys
-import import funk.PsychFileSystem as FileSystem;;
+import sys.FileSystem;
 import sys.FileStat;
-import import funk.PsychFile as File;;
-import import funk.PsychFile as File;Input;
-import import funk.PsychFile as File;Output;
+import sys.io.File;
+import sys.io.FileInput;
+import sys.io.FileOutput;
 #end
 
 /**
