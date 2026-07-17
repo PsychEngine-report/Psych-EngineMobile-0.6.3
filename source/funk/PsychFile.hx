@@ -10,6 +10,8 @@ import sys.io.FileInput;
 import sys.io.FileOutput;
 #end
 
+using StringTools;
+
 /**
  * Unified file class that works with both native file access and OpenFL assets.
  * @see https://github.com/Psych-Slice/P-Slice/blob/master/source/mikolka/funkin/custom/NativeFileSystem.hx
