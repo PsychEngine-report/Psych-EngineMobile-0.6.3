@@ -108,7 +108,7 @@ class WeekData {
 				{
 					var path = haxe.io.Path.join([Paths.mods(), splitName[0]]);
 					//trace('trying to push: ' + splitName[0]);
-					if (FileSystem;.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/'))
+					if (FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/'))
 					{
 						directories.push(path + '/');
 						//trace('pushed Directory: ' + splitName[0]);
