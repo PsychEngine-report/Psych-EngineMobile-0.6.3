@@ -113,19 +113,39 @@ class MobileData
 	{
 		folder = folder.contains(':') ? folder.split(':')[1] : folder;
 
-		#if MODS_ALLOWED if (FileSystem.exists(folder)) #end
-		for (file in Paths.readDirectory(folder))
+		#if sys
+		if (FileSystem.exists(folder))
 		{
-			var fileWithNoLib:String = file.contains(':') ? file.split(':')[1] : file;
-			if (Path.extension(fileWithNoLib) == 'json')
+			for (file in FileSystem.readDirectory(folder))
 			{
-				file = Path.join([folder, Path.withoutDirectory(file)]);
-				var str = #if MODS_ALLOWED File.getContent(file) #else Assets.getText(file) #end;
-				var json:TouchButtonsData = cast Json.parse(str);
-				var mapKey:String = Path.withoutDirectory(Path.withoutExtension(fileWithNoLib));
-				map.set(mapKey, json);
+				var fileWithNoLib:String = file.contains(':') ? file.split(':')[1] : file;
+				if (Path.extension(fileWithNoLib) == 'json')
+				{
+					var fullPath = Path.join([folder, Path.withoutDirectory(file)]);
+					var str = File.getContent(fullPath);
+					var json:TouchButtonsData = cast Json.parse(str);
+					var mapKey:String = Path.withoutDirectory(Path.withoutExtension(fileWithNoLib));
+					map.set(mapKey, json);
+				}
 			}
 		}
+		#else
+		if (Assets.exists(folder)) 
+		{
+			for (file in Paths.readDirectory(folder))
+			{
+				var fileWithNoLib:String = file.contains(':') ? file.split(':')[1] : file;
+				if (Path.extension(fileWithNoLib) == 'json')
+				{
+					var fullPath = Path.join([folder, Path.withoutDirectory(file)]);
+					var str = Assets.getText(fullPath);
+					var json:TouchButtonsData = cast Json.parse(str);
+					var mapKey:String = Path.withoutDirectory(Path.withoutExtension(fileWithNoLib));
+					map.set(mapKey, json);
+				}
+			}
+		}
+		#end
 	}
 
 	static function directoriesWithFile(path:String, fileToFind:String, mods:Bool = true)
