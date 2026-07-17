@@ -113,7 +113,7 @@ jobs:
           tag_name: "release-${{ needs.get-commit-hash.outputs.commit_hash }}"
           make_latest: true
           files: |
-            /home/runner/PsychEngine-png.apk
-            /home/runner/PsychEngine-png.ipa
-            /home/runner/PsychEngine-astc.apk
-            /home/runner/PsychEngine-astc.ipa
+            /home/runner/*-png.apk
+            /home/runner/*-png.ipa
+            /home/runner/*-astc.apk
+            /home/runner/*-astc.ipa
