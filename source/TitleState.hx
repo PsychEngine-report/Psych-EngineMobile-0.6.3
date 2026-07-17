@@ -100,11 +100,11 @@ class TitleState extends MusicBeatState
 		//trace(path, FileSystem.exists(path));
 
 		/*#if (polymod && !html5)
-		if (import funk.PsychFileSystem as FileSystem;.exists('mods/')) {
+		if (FileSystem;.exists('mods/')) {
 			var folders:Array<String> = [];
 			for (file in sys.Paths.readDirectory('mods/')) {
 				var path = haxe.io.Path.join(['mods/', file]);
-				if (import funk.PsychFileSystem as FileSystem;.isDirectory(path)) {
+				if (FileSystem;.isDirectory(path)) {
 					folders.push(file);
 				}
 			}
