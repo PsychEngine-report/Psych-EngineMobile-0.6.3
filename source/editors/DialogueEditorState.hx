@@ -29,7 +29,7 @@ import DialogueBoxPsych;
 import lime.system.Clipboard;
 import Alphabet;
 #if sys
-import funk.PsychFile as File;;
+import funk.PsychFile as File;
 #end
 
 using StringTools;
