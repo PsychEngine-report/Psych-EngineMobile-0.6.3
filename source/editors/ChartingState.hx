@@ -50,8 +50,8 @@ import openfl.utils.ByteArray;
 using StringTools;
 #if sys
 import openfl.media.Sound;
-import import funk.PsychFileSystem as FileSystem;;
-import import funk.PsychFile as File;;
+import funk.PsychFileSystem as FileSystem;;
+import funk.PsychFile as File;;
 #end
 
 

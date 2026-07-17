@@ -35,7 +35,7 @@ import lime.system.Clipboard;
 import flixel.animation.FlxAnimation;
 
 #if MODS_ALLOWED
-import import funk.PsychFileSystem as FileSystem;;
+import funk.PsychFileSystem as FileSystem;;
 #end
 
 using StringTools;

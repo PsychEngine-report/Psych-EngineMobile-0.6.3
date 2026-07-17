@@ -67,8 +67,8 @@ import openfl.filters.ShaderFilter;
 #end
 
 #if sys
-import import funk.PsychFileSystem as FileSystem;
-import import funk.PsychFile as File;
+import funk.PsychFileSystem as FileSystem;
+import funk.PsychFile as File;
 #end
 
 #if VIDEOS_ALLOWED

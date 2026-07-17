@@ -16,8 +16,8 @@ import haxe.Json;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 #if MODS_ALLOWED
-import import funk.PsychFileSystem as FileSystem;
-import import funk.PsychFile as File;
+import funk.PsychFileSystem as FileSystem;
+import funk.PsychFile as File;
 #end
 import options.GraphicsSettingsSubState;
 //import flixel.graphics.FlxGraphic;

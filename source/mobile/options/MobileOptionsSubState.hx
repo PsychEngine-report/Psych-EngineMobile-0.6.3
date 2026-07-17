@@ -4,7 +4,7 @@ import flixel.input.keyboard.FlxKey;
 import options.BaseOptionsMenu;
 import options.Option;
 #if sys
-import import funk.PsychFile as File;
+import funk.PsychFile as File;
 #end
 
 class MobileOptionsSubState extends BaseOptionsMenu
