@@ -123,12 +123,12 @@ jobs:
         if: (inputs.name == 'iOS-PNG' || inputs.name == 'iOS-ASTC')
         run: |
           brew install ldid
-          cd export/release/ios/build/Release-iphoneos/PsychEngine.app
-          ldid -S../../../PsychEngine/PsychEngine.entitlements PsychEngine
+          cd export/release/ios/build/Release-iphoneos/*.app
+          ldid -S../../../*/*.entitlements *
           cd ..
           mkdir Payload
-          mv PsychEngine.app Payload
-          zip -r PsychEngine.ipa Payload
+          mv *.app Payload
+          zip -r *.ipa Payload
 
       - name: Upload Artifact
         uses: actions/upload-artifact@main

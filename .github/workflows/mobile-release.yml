@@ -41,22 +41,22 @@ jobs:
             os: ubuntu-22.04
             buildArgs: "android -final -D officialBuild"
             artifactName: androidBuild-PNG
-            artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*.apk"
+            artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*-png.apk"
           - name: Android-ASTC
             os: ubuntu-22.04
             buildArgs: "android -final -D officialBuild -D USING_GPU_TEXTURES"
             artifactName: androidBuild-ASTC
-            artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*.apk"
+            artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*-astc.apk"
           - name: iOS-PNG
             os: macos-15
             buildArgs: "ios -final -nosign -D officialBuild"
             artifactName: iOSBuild-PNG
-            artifactPath: "export/release/ios/build/Release-iphoneos/PsychEngine.ipa"
+            artifactPath: "export/release/ios/build/Release-iphoneos/PsychEngine-png.ipa"
           - name: iOS-ASTC
             os: macos-15
             buildArgs: "ios -final -nosign -D officialBuild -D USING_GPU_TEXTURES"
             artifactName: iOSBuild-ASTC
-            artifactPath: "export/release/ios/build/Release-iphoneos/PsychEngine.ipa"
+            artifactPath: "export/release/ios/build/Release-iphoneos/PsychEngine-png.ipa"
     uses: ./.github/workflows/build.yml
     with:
         name: ${{ matrix.name }}
