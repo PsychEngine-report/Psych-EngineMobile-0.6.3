@@ -91,14 +91,14 @@
     </section>
 
     <section if="USING_GPU_TEXTURES">
-        <assets path="assets/preload/mobile/images-astc" rename="assets/mobile/images"  exclude="*.ogg|images-png|images-astc" if="web"/>
-        <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web"/>
-    </section>
+    <assets path="assets/preload/mobile/images-astc" rename="assets/mobile/images" exclude="*.ogg|images-png|images-astc" if="web" library="mobile"/>
+    <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web" library="mobile"/>
+</section>
 
-	<section unless="USING_GPU_TEXTURES">
-        <assets path="assets/preload/mobile/images-png" rename="assets/mobile/images"  exclude="*.ogg|images-png|images-astc" if="web"/>
-        <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web"/>
-    </section>
+<section unless="USING_GPU_TEXTURES">
+    <assets path="assets/preload/mobile/images-png" rename="assets/mobile/images" exclude="*.ogg|images-png|images-astc" if="web" library="mobile"/>
+    <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web" library="mobile"/>
+</section>
 
 	<!-- DISABLED DUE OUTDATED -->
 	<define name="CHECK_FOR_UPDATES" if="desktop officialBuild"/>
