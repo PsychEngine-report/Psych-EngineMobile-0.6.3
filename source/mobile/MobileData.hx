@@ -54,8 +54,9 @@ class MobileData
 		save = new FlxSave();
 		save.bind('MobileControls', flixel.FlxG.stage.application.meta.get('company'));
 
-		readDirectory(Paths.getPreloadPath('mobile/DPadModes'), dpadModes);
-		readDirectory(Paths.getPreloadPath('mobile/ActionModes'), actionModes);
+		readDirectory(Paths.getPath('DPadModes', TEXT, 'mobile'), dpadModes);
+		readDirectory(Paths.getPath('ActionModes', TEXT, 'mobile'), actionModes);
+		
 		#if MODS_ALLOWED
 		for (folder in directoriesWithFile(Paths.getPreloadPath(), 'mobile/'))
 		{
