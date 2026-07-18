@@ -352,9 +352,9 @@ class TitleState extends MusicBeatState
         }
 
         if (!FileSystem.exists(path)) {
-            path = #if mobile Sys.getCwd() + #end "assets/images/titleEnter.png";
+            path = "assets/images/titleEnter.png";
             if (!FileSystem.exists(path)) {
-                path = #if mobile Sys.getCwd() + #end "assets/images/titleEnter.astc";
+                path = "assets/images/titleEnter.astc";
             }
         }
 
