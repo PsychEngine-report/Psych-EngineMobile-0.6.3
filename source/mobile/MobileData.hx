@@ -111,20 +111,29 @@ class MobileData
 	
 	static function readDirectory(folder:String, map:Dynamic)
 	{
-		folder = folder.contains(':') ? folder.split(':')[1] : folder;
-
-		if (FileSystem.exists(folder))
+		var originalFolder:String = folder;
+		var cleanFolder:String = folder.contains(':') ? folder.split(':')[1] : folder;
+		if (FileSystem.exists(cleanFolder))
 		{
-			for (file in FileSystem.readDirectory(folder))
+			for (file in FileSystem.readDirectory(cleanFolder))
 			{
 				var fileWithNoLib:String = file.contains(':') ? file.split(':')[1] : file;
 				if (Path.extension(fileWithNoLib) == 'json')
 				{
-					var fullPath = Path.join([folder, Path.withoutDirectory(file)]);
-					var str = File.getContent(fullPath);
-					var json:TouchButtonsData = cast Json.parse(str);
-					var mapKey:String = Path.withoutDirectory(Path.withoutExtension(fileWithNoLib));
-					map.set(mapKey, json);
+					var targetFile:String = Path.join([originalFolder, Path.withoutDirectory(fileWithNoLib)]);
+					
+					var str:String = "";
+					try {
+						str = File.getContent(targetFile);
+					} catch(e:Dynamic) {
+						trace('Failed to read mobile JSON asset path: ' + targetFile + ' - Error: ' + e);
+						continue;
+					}
+					if (str != null && str.trim().length > 0) {
+						var json:TouchButtonsData = cast Json.parse(str);
+						var mapKey:String = Path.withoutDirectory(Path.withoutExtension(fileWithNoLib));
+						map.set(mapKey, json);
+					}
 				}
 			}
 		}
