@@ -52,8 +52,6 @@
 	<define name="TITLE_SCREEN_EASTER_EGG" if="officialBuild"/> <!-- DELETE THE if="officialBuild" for enabling this on an unofficial build -->
 	<define name="DISCORD_ALLOWED" if="desktop" />
 
-	<haxedef name="USING_GPU_TEXTURES" if="mobile" />
-
     <section if="USING_GPU_TEXTURES">
         <assets path="assets/preload/images-astc" rename="assets/images" />
         <assets path="assets/preload" rename="assets" exclude="*.mp3|images-png|images-astc" />
@@ -103,7 +101,7 @@
 </section>
 
 	<!-- DISABLED DUE OUTDATED -->
-	<define name="CHECK_FOR_UPDATES" if="desktop officialBuild"/>
+	<define name="CHECK_FOR_UPDATES" if="desktop officialBuild mobile"/>
 
 	<!-- <define name="PRELOAD_ALL" /> -->
 	<define name="PRELOAD_ALL" unless="web" />
@@ -136,7 +134,7 @@
 	<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
 	<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
 
-	<section if="mobile">
+	<section if="USING_GPU_TEXTURES">
         <assets path="assets/shared/images-astc" rename="assets/shared/images" library="shared" />
         <assets path="assets/shared" library="shared" exclude="*.mp3|images-png|images-astc" />
 
@@ -159,7 +157,7 @@
         <assets path="assets/week7" library="week7" exclude="*.mp3|images-png|images-astc" />
     </section>
 
-    <section unless="mobile">
+    <section unless="USING_GPU_TEXTURES">
         <assets path="assets/shared/images-png" rename="assets/shared/images" library="shared" />
         <assets path="assets/shared" library="shared" exclude="*.mp3|images-png|images-astc" unless="web" />
         <assets path="assets/shared" library="shared" exclude="*.ogg|images-png|images-astc" if="web" />
