@@ -12,6 +12,8 @@ import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.system.System as LimeSystem;
 
+using StringTools;
+
 #if windows
 @:buildXml('
 <target id="haxe">
@@ -26,8 +28,6 @@ import lime.system.System as LimeSystem;
 extern "C" HRESULT WINAPI SetCurrentProcessExplicitAppUserModelID(PCWSTR AppID);
 ')
 #end
-
-using StringTools;
 
 class Main extends Sprite
 {
