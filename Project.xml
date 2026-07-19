@@ -89,19 +89,19 @@
     </section>
 
     <section if="USING_GPU_TEXTURES">
-	    <assets path="assets/preload/mobile/images-astc" rename="assets/mobile/images" unless="web" library="mobile"/>
-	    <assets path="assets/preload/mobile/images-astc" rename="mobile/images" unless="web" library="mobile"/>
+	    <assets path="assets/preload/mobile/images-astc" rename="assets/mobile/images" unless="web" />
+	    <assets path="assets/preload/mobile/images-astc" rename="mobile/images" unless="web" />
 	    
-	    <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web" library="mobile"/>
-	    <assets path="assets/preload/mobile" rename="mobile" exclude="*.mp3|images-png|images-astc" unless="web" library="mobile"/>
+	    <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web" />
+	    <assets path="assets/preload/mobile" rename="mobile" exclude="*.mp3|images-png|images-astc" unless="web" />
 	</section>
 
 	<section unless="USING_GPU_TEXTURES">
-	    <assets path="assets/preload/mobile/images-png" rename="assets/mobile/images" unless="web" library="mobile"/>
-	    <assets path="assets/preload/mobile/images-png" rename="mobile/images" unless="web" library="mobile"/>
+	    <assets path="assets/preload/mobile/images-png" rename="assets/mobile/images" unless="web" />
+	    <assets path="assets/preload/mobile/images-png" rename="mobile/images" unless="web" />
 	    
-	    <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web" library="mobile"/>
-	    <assets path="assets/preload/mobile" rename="mobile" exclude="*.mp3|images-png|images-astc" unless="web" library="mobile"/>
+	    <assets path="assets/preload/mobile" rename="assets/mobile" exclude="*.mp3|images-png|images-astc" unless="web" />
+	    <assets path="assets/preload/mobile" rename="mobile" exclude="*.mp3|images-png|images-astc" unless="web" />
 	</section>
 
 	<!-- DISABLED DUE OUTDATED -->
