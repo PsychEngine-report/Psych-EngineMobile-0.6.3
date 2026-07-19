@@ -126,7 +126,7 @@ class FPS extends TextField
 		cacheCount = currentCount;
 	}
 
-	#if windows | android
+	#if windows
 	@:functionCode('
 		SYSTEM_INFO osInfo;
 
