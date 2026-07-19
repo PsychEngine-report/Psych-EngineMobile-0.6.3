@@ -37,6 +37,11 @@ jobs:
     strategy:
       matrix:
         include:
+          - name: Windows-PNG
+            os: windows-latest
+            buildArgs: "windows -final -D officialBuild"
+            artifactName: windows-PNG
+            artifactPath: export\release\windows\bin\*
           - name: Android-PNG
             os: ubuntu-22.04
             buildArgs: "android -final -D officialBuild"
@@ -70,6 +75,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
+      - name: Download Windows Build
+        uses: actions/download-artifact@main
+        with:
+          name: Windows PNG
+          path: /home/runner/windows-PNG
+
+      - name: Zip Windows Build For Release
+        run: |
+          cd /home/runner/windows-PNG
+          zip -r "/home/runner/${{ env.PROJECT_NAME }}-Windows-PNG.zip" .
+          
       - name: Download Android Build
         uses: actions/download-artifact@main
         with:
@@ -117,3 +133,4 @@ jobs:
             /home/runner/*-png.ipa
             /home/runner/*-astc.apk
             /home/runner/*-astc.ipa
+            /home/runner/*-png.zip
