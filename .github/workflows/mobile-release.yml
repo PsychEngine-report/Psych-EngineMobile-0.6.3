@@ -40,7 +40,7 @@ jobs:
           - name: Windows-PNG
             os: windows-latest
             buildArgs: "windows -final -D officialBuild"
-            artifactName: windows-PNG
+            artifactName: windowsBuild-PNG
             artifactPath: export\release\windows\bin\*
           - name: Android-PNG
             os: ubuntu-22.04
@@ -78,12 +78,12 @@ jobs:
       - name: Download Windows Build
         uses: actions/download-artifact@main
         with:
-          name: Windows PNG
-          path: /home/runner/windows-PNG
+          name: windowsBuild-PNG
+          path: /home/runner/windowsBuild-PNG
 
       - name: Zip Windows Build For Release
         run: |
-          cd /home/runner/windows-PNG
+          cd /home/runner/windowsBuild-PNG
           zip -r "/home/runner/${{ env.PROJECT_NAME }}-Windows-PNG.zip" .
           
       - name: Download Android Build
