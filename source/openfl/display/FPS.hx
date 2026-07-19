@@ -62,7 +62,7 @@ class FPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 10, color);
+		defaultTextFormat = new TextFormat("_sans", 16, color);
 		autoSize = LEFT;
 		multiline = true;
 		text = "HI IM SUPPOSED BE FPS BUT SMALLER: ";
@@ -126,7 +126,7 @@ class FPS extends TextField
 		cacheCount = currentCount;
 	}
 
-	#if (windows || android)
+	#if windows | android
 	@:functionCode('
 		SYSTEM_INFO osInfo;
 
