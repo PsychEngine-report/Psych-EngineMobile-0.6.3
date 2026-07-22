@@ -36,7 +36,17 @@ class Main extends Sprite {
 
 		var animationData:AnimationData = Json.parse(Assets.getText("assets/TEST/Animation.json"));
 		var atlasData:AtlasData = Json.parse(Assets.getText("assets/TEST/spritemap.json"));
-		var bitmapData:BitmapData = Assets.getBitmapData("assets/TEST/spritemap.png") || Assets.getBitmapData("assets/TEST/spritemap.astc");
+
+		var bitmapData:BitmapData = null;
+		if (Assets.exists("assets/TEST/spritemap.astc")) {
+			bitmapData = Assets.getBitmapData("assets/TEST/spritemap.astc");
+		} else if (Assets.exists("assets/TEST/spritemap.png")) {
+			bitmapData = Assets.getBitmapData("assets/TEST/spritemap.png");
+		}
+
+		if (bitmapData == null) {
+			trace("CRITICAL: Failed to load spritemap image (neither PNG nor ASTC found)!");
+		}
 
 		aa = new TileAnimationLibrary(animationData, atlasData, bitmapData);
 		ss = new SpriteAnimationLibrary(animationData, atlasData, bitmapData);
