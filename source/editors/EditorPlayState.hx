@@ -20,6 +20,10 @@ import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import FunkinLua;
 
+#if sys
+import funk.PsychFileSystem as FileSystem;
+#end
+
 import mobile.TouchButton;
 
 using StringTools;
