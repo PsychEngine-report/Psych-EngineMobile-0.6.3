@@ -113,12 +113,12 @@ class EditorPlayState extends MusicBeatState
 		else
 			vocals = new FlxSound();
 
-		#if !android
+		#if mobile
 		addTouchPad("NONE", "P");
 		addTouchPadCamera();
 		#end
 		addMobileControls();
-		mobileControls.instance.visible = #if !android touchPad.visible = #end true;
+		mobileControls.instance.visible = #if mobile touchPad.visible = #end true;
 		mobileControls.onButtonDown.add(onButtonPress);
 		mobileControls.onButtonUp.add(onButtonRelease);
 
@@ -163,7 +163,7 @@ class EditorPlayState extends MusicBeatState
 		stepTxt.borderSize = 1.25;
 		add(stepTxt);
 
-		final buttonPause:String = controls.mobileC ? #if !android 'P' #else 'BACK' #end : 'ESC';
+		final buttonPause:String = controls.mobileC ? #if mobile 'P' #else 'BACK' #end : 'ESC';
 
 		var tipText:FlxText = new FlxText(10, FlxG.height - 24, 0, 'Press $buttonPause to Go Back to Chart Editor', 16);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -339,7 +339,7 @@ class EditorPlayState extends MusicBeatState
 	override function update(elapsed:Float) {
 		if (#if android FlxG.android.justReleased.BACK #else touchPad.buttonP.justPressed #end || FlxG.keys.justPressed.ESCAPE)
 		{
-			mobileControls.instance.visible = #if !android touchPad.visible = #end false;
+			mobileControls.instance.visible = #if mobile touchPad.visible = #end false;
 			FlxG.sound.music.pause();
 			vocals.pause();
 			LoadingState.loadAndSwitchState(new editors.ChartingState());

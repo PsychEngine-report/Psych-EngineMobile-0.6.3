@@ -1099,7 +1099,7 @@ class PlayState extends MusicBeatState
 
 		// startCountdown();
 
-		#if !android
+		#if mobile
 		addTouchPad("NONE", "P");
 		addTouchPadCamera();
 		touchPad.visible = true;
@@ -3956,7 +3956,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		mobileControls.instance.visible = #if !android touchPad.visible = #end false;
+		mobileControls.instance.visible = #if mobile touchPad.visible = #end false;
 		timeBarBG.visible = false;
 		timeBar.visible = false;
 		timeTxt.visible = false;
