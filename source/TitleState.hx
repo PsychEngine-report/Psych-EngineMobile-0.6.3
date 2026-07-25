@@ -17,7 +17,6 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 #if MODS_ALLOWED
 import funk.PsychFileSystem as FileSystem;
-import funk.PsychFile as File;
 #end
 import options.GraphicsSettingsSubState;
 //import flixel.graphics.FlxGraphic;
