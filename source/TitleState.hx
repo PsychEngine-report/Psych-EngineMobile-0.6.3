@@ -337,41 +337,51 @@ class TitleState extends MusicBeatState
 		logoBl.shader = swagShader.shader;
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
-        #if MODS_ALLOWED
-        var baseDir = #if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + "/";
-        var path = baseDir + "images/titleEnter.png";
-        if (!FileSystem.exists(path)) {
-            path = baseDir + "images/titleEnter.astc";
-        }
 
-        if (!FileSystem.exists(path)) {
-            path = #if mobile Sys.getCwd() + #end "mods/images/titleEnter.png";
-            if (!FileSystem.exists(path)) {
-                path = #if mobile Sys.getCwd() + #end "mods/images/titleEnter.astc";
-            }
-        }
+		#if MODS_ALLOWED
+		function getValidPath(basePath:String):String {
+			var pngPath = basePath + ".png";
+			var astcPath = basePath + ".astc";
 
-        if (!FileSystem.exists(path)) {
-            path = "assets/images/titleEnter.png";
-            if (!FileSystem.exists(path)) {
-                path = "assets/images/titleEnter.astc";
-            }
-        }
+			if (FileSystem.exists(pngPath)) return pngPath;
+			if (FileSystem.exists(astcPath)) return astcPath;
+			return null;
+		}
 
-        var xmlPath = StringTools.replace(path, ".png", ".xml");
-        if (path.endsWith(".astc")) {
-            xmlPath = StringTools.replace(path, ".astc", ".xml");
-        }
+		var path = getValidPath(#if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + "/images/titleEnter");
 
-        titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path), File.getContent(xmlPath));
-        #else
+		if (path == null) {
+			path = getValidPath(#if mobile Sys.getCwd() + #end "mods/images/titleEnter");
+		}
 
+		if (path == null) {
+			path = getValidPath("assets/images/titleEnter");
+		}
+
+		if (path != null) {
+			var xmlPath = path.endsWith(".png") ? StringTools.replace(path, ".png", ".xml") : StringTools.replace(path, ".astc", ".xml");
+			
+			var imgGraphic = PsychFile.getBitmapData(path);
+			var xmlData = PsychFile.getContent(xmlPath);
+
+			if (imgGraphic != null && xmlData != null) {
+				titleText.frames = FlxAtlasFrames.fromSparrow(imgGraphic, xmlData);
+			} else {
+				titleText.frames = Paths.getSparrowAtlas('titleEnter');
+			}
+		} else {
+			titleText.frames = Paths.getSparrowAtlas('titleEnter');
+		}
+		#else
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
 		#end
+
 		var animFrames:Array<FlxFrame> = [];
-		@:privateAccess {
-			titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
-			titleText.animation.findByPrefix(animFrames, "ENTER FREEZE");
+		if (titleText != null && titleText.animation != null) {
+			@:privateAccess {
+				titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
+				titleText.animation.findByPrefix(animFrames, "ENTER FREEZE");
+			}
 		}
 		
 		if (animFrames.length > 0) {
