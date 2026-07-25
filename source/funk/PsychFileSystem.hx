@@ -59,6 +59,20 @@ class PsychFileSystem {
 		#end
 	}
 
+	public static function getBitmapData(path:String):openfl.display.BitmapData {
+    #if sys
+    if (FileSystem.exists(cwd(path)))
+        return openfl.display.BitmapData.fromFile(cwd(path));
+    #end
+
+    var openflPath = openflcwd(path);
+    if (Assets.exists(openflPath, IMAGE)) {
+        return Assets.getBitmapData(openflPath);
+    }
+    
+    return null;
+	}
+
 	public static function fullPath(path:String):String {
 		#if sys
 		return FileSystem.fullPath(path);

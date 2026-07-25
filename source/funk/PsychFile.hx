@@ -111,4 +111,18 @@ class PsychFile {
         File.copy(cwd(srcPath), cwd(dstPath));
         #end
 	}
+
+	public static function getBitmapData(path:String):openfl.display.BitmapData {
+    #if sys
+    if (FileSystem.exists(cwd(path)))
+        return openfl.display.BitmapData.fromFile(cwd(path));
+    #end
+
+    var openflPath = openflcwd(path);
+    if (Assets.exists(openflPath, IMAGE)) {
+        return Assets.getBitmapData(openflPath);
+    }
+    
+    return null;
+	}
 }
