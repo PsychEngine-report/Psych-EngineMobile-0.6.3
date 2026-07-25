@@ -17,6 +17,7 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 #if MODS_ALLOWED
 import funk.PsychFileSystem as FileSystem;
+import funk.PsychFile as File;
 #end
 import options.GraphicsSettingsSubState;
 //import flixel.graphics.FlxGraphic;
@@ -360,8 +361,8 @@ class TitleState extends MusicBeatState
 		if (path != null) {
 			var xmlPath = path.endsWith(".png") ? StringTools.replace(path, ".png", ".xml") : StringTools.replace(path, ".astc", ".xml");
 			
-			var imgGraphic = PsychFile.getBitmapData(path);
-			var xmlData = PsychFile.getContent(xmlPath);
+			var imgGraphic = File.getBitmapData(path);
+			var xmlData = File.getContent(xmlPath);
 
 			if (imgGraphic != null && xmlData != null) {
 				titleText.frames = FlxAtlasFrames.fromSparrow(imgGraphic, xmlData);
