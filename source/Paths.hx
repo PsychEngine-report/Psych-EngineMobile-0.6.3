@@ -485,7 +485,7 @@ class Paths
 	#if MODS_ALLOWED
 	inline static public function mods(key:String = '')
 	{
-		return #if mobile Sys.getCwd() + #end 'mods/' + key;
+		return #if mobile StorageUtil.getStorageDirectory() + #end 'mods/' + key;
 	}
 
 	inline static public function modsFont(key:String)
@@ -526,19 +526,17 @@ class Paths
 		return modFolders('images/' + key + '.txt');
 	}
 
-	/* Goes unused for now
-
-		inline static public function modsShaderFragment(key:String, ?library:String)
-		{
-			return modFolders('shaders/'+key+'.frag');
-		}
-		inline static public function modsShaderVertex(key:String, ?library:String)
-		{
-			return modFolders('shaders/'+key+'.vert');
-		}
-		inline static public function modsAchievements(key:String) {
-			return modFolders('achievements/' + key + '.json');
-	}*/
+	inline static public function modsShaderFragment(key:String, ?library:String)
+	{
+		return modFolders('shaders/'+key+'.frag');
+	}
+	inline static public function modsShaderVertex(key:String, ?library:String)
+	{
+		return modFolders('shaders/'+key+'.vert');
+	}
+	inline static public function modsAchievements(key:String) {
+		return modFolders('achievements/' + key + '.json');
+	}
 	static public function modFolders(key:String)
 	{
 		if (currentModDirectory != null && currentModDirectory.length > 0)
@@ -570,7 +568,7 @@ class Paths
 			}
 			#end
 		}
-		return #if mobile Sys.getCwd() + #end 'mods/' + key;
+		return #if mobile StorageUtil.getStorageDirectory() + #end 'mods/' + key;
 	}
 
 	#if (android || linux || ios)
