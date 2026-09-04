@@ -26,10 +26,10 @@ import openfl.geom.Rectangle;
 import flixel.ui.FlxButton;
 import flixel.FlxBasic;
 import funk.PsychFile as File;
-/*import haxe.zip.Reader;
+import haxe.zip.Reader;
 import haxe.zip.Entry;
 import haxe.zip.Uncompress;
-import haxe.zip.Writer;*/
+import haxe.zip.Writer;
 
 using StringTools;
 
@@ -91,7 +91,7 @@ class ModsMenuState extends MusicBeatState
 		noModsTxt.screenCenter();
 		visibleWhenNoMods.push(noModsTxt);
 
-		var path:String = #if mobile Sys.getCwd() + #end 'modsList.txt';
+		var path:String = #if mobile StorageUtil.getStorageDirectory() + #end 'modsList.txt';
 		if(FileSystem.exists(path))
 		{
 			var leMods:Array<String> = CoolUtil.coolTextFile(path);
@@ -110,7 +110,7 @@ class ModsMenuState extends MusicBeatState
 
 		// FIND MOD FOLDERS
 		var boolshit = true;
-		if (FileSystem.exists(#if mobile Sys.getCwd() + #end "modsList.txt")){
+		if (FileSystem.exists(#if mobile StorageUtil.getStorageDirectory() + #end "modsList.txt")){
 			for (folder in Paths.getModDirectories())
 			{
 				if(!Paths.ignoreModFolders.contains(folder))
@@ -255,11 +255,7 @@ class ModsMenuState extends MusicBeatState
 
 		// more buttons
 		var startX:Int = 1100;
-
-
-
-
-		/*
+	
 		installButton = new FlxButton(startX, 620, "Install Mod", function()
 		{
 			installMod();
@@ -308,7 +304,7 @@ class ModsMenuState extends MusicBeatState
 		removeButton.label.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		setAllLabelsOffset(removeButton, 2, 15);
 		add(removeButton);
-		visibleWhenHasMods.push(removeButton);*/
+		visibleWhenHasMods.push(removeButton);
 
 		///////
 		descriptionTxt = new FlxText(148, 0, FlxG.width - 216, "", 32);
@@ -385,20 +381,20 @@ class ModsMenuState extends MusicBeatState
 		super.create();
 	}
 
-	/*function getIntArray(max:Int):Array<Int>{
+	function getIntArray(max:Int):Array<Int>{
 		var arr:Array<Int> = [];
 		for (i in 0...max) {
 			arr.push(i);
 		}
 		return arr;
-	}*/
+	}
 	function addToModsList(values:Array<Dynamic>)
 	{
 		for (i in 0...modsList.length)
 		{
 			if(modsList[i][0] == values[0])
 			{
-				//trace(modsList[i][0], values[0]);
+				trace(modsList[i][0], values[0]);
 				return;
 			}
 		}
@@ -487,7 +483,7 @@ class ModsMenuState extends MusicBeatState
 			saveTxt();
 			if(needaReset)
 			{
-				//MusicBeatState.switchState(new TitleState());
+				MusicBeatState.switchState(new TitleState());
 				TitleState.initialized = false;
 				TitleState.closedState = false;
 				FlxG.sound.music.fadeOut(0.3);
@@ -572,7 +568,7 @@ class ModsMenuState extends MusicBeatState
 				}
 
 				// correct layering
-				var stuffArray:Array<FlxSprite> = [/*removeButton, installButton,*/ selector, descriptionTxt, mod.alphabet, mod.icon];
+				var stuffArray:Array<FlxSprite> = [removeButton, installButton, selector, descriptionTxt, mod.alphabet, mod.icon];
 				for (obj in stuffArray)
 				{
 					remove(obj);
@@ -651,7 +647,7 @@ class ModsMenuState extends MusicBeatState
 		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 8), Std.int(Math.abs(antiY - 1)),  3, 1), FlxColor.BLACK);
 	}
 
-	/*var _file:FileReference = null;
+	var _file:FileReference = null;
 	function installMod() {
 		var zipFilter:FileFilter = new FileFilter('ZIP', 'zip');
 		_file = new FileReference();
@@ -710,7 +706,7 @@ class ModsMenuState extends MusicBeatState
 		_file = null;
 		canExit = true;
 		trace("Problem loading file");
-	}*/
+	}
 }
 
 class ModMetadata
@@ -765,7 +761,7 @@ class ModMetadata
 				}
 
 				this.restart = restart;
-				/*
+				
 				if(stuff.name != null && stuff.name.length > 0)
 				{
 					this.name = stuff.name;
@@ -777,7 +773,7 @@ class ModMetadata
 				if(stuff.color != null && stuff.color.length > 2)
 				{
 					this.color = FlxColor.fromRGB(stuff.color[0], stuff.color[1], stuff.color[2]);
-				}*/
+				}
 			}
 		}
 	}
