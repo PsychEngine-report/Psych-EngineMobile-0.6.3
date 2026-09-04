@@ -59,7 +59,7 @@ class Main extends Sprite
 		#if android
 		StorageUtil.requestPermissions();
 		#end
-		Sys.setCwd(StorageUtil.getStorageDirectory());
+		//Sys.setCwd(StorageUtil.getStorageDirectory());
 		#end
 
 		CrashHandler.init();
