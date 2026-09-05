@@ -348,10 +348,10 @@ class TitleState extends MusicBeatState
 			return null;
 		}
 
-		var path = getValidPath(#if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + "/images/titleEnter");
+		var path = getValidPath(#if mobile StorageUtil.getStorageDirectory() + #end "mods/" + Paths.currentModDirectory + "/images/titleEnter");
 
 		if (path == null) {
-			path = getValidPath(#if mobile Sys.getCwd() + #end "mods/images/titleEnter");
+			path = getValidPath(#if mobile StorageUtil.getStorageDirectory() + #end "mods/images/titleEnter");
 		}
 
 		if (path == null) {

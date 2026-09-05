@@ -453,10 +453,8 @@ class Paths
 	{
 		#if MODS_ALLOWED
 		var file:String = modsSounds(path, key);
-		if (FileSystem.exists(file))
-		{
-			if (!currentTrackedSounds.exists(file))
-			{
+		if(FileSystem.exists(file)) {
+			if(!currentTrackedSounds.exists(file)) {
 				currentTrackedSounds.set(file, Sound.fromFile(file));
 			}
 			localTrackedAssets.push(key);
@@ -479,7 +477,7 @@ class Paths
 		}
 		#end
 		localTrackedAssets.push(gottenPath);
-	return currentTrackedSounds.get(gottenPath);
+		return currentTrackedSounds.get(gottenPath);
 	}
 
 	#if MODS_ALLOWED
@@ -630,7 +628,7 @@ class Paths
 	static public function pushGlobalMods() // prob a better way to do this but idc
 	{
 		globalMods = [];
-		var path:String = #if mobile Sys.getCwd() + #end 'modsList.txt';
+		var path:String = #if mobile StorageUtil.getStorageDirectory() + #end 'modsList.txt';
 		if (FileSystem.exists(path))
 		{
 			var list:Array<String> = CoolUtil.coolTextFile(path);

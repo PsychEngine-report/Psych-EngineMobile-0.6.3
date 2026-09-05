@@ -53,7 +53,7 @@ class CreditsState extends MusicBeatState
 		add(grpOptions);
 
 		#if MODS_ALLOWED
-		var path:String = #if mobile Sys.getCwd() + #end 'modsList.txt';
+		var path:String = #if mobile StorageUtil.getStorageDirectory() + #end 'modsList.txt';
 		if(FileSystem.exists(path))
 		{
 			var leMods:Array<String> = CoolUtil.coolTextFile(path);

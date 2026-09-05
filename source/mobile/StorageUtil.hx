@@ -53,7 +53,7 @@ class StorageUtil
 			
 	public static function saveContent(fileName:String, fileData:String, ?alert:Bool = true):Void
 	{
-		final folder:String = #if android StorageUtil.getExternalStorageDirectory() + #else Sys.getCwd() + #end 'saves/';
+		final folder:String = #if android StorageUtil.getExternalStorageDirectory() + #else StorageUtil.getStorageDirectory() + #end 'saves/';
 		try
 		{
 			if (!FileSystem.exists('saves'))

@@ -91,7 +91,7 @@ class WeekData {
 		weeksLoaded.clear();
 		#if MODS_ALLOWED
 		var disabledMods:Array<String> = [];
-		var modsListPath:String = #if mobile Sys.getCwd() + #end 'modsList.txt';
+		var modsListPath:String = #if mobile StorageUtil.getStorageDirectory() + #end 'modsList.txt';
 		var directories:Array<String> = [Paths.mods(), Paths.getPreloadPath()];
 		var originalLength:Int = directories.length;
 		if(FileSystem.exists(modsListPath))
@@ -248,9 +248,9 @@ class WeekData {
 		Paths.currentModDirectory = '';
 		
 		#if MODS_ALLOWED
-		if (FileSystem.exists(#if mobile Sys.getCwd() + #end "modsList.txt"))
+		if (FileSystem.exists(#if mobile StorageUtil.getStorageDirectory() + #end "modsList.txt"))
 		{
-			var list:Array<String> = CoolUtil.listFromString(File.getContent(#if mobile Sys.getCwd() + #end "modsList.txt"));
+			var list:Array<String> = CoolUtil.listFromString(File.getContent(#if mobile StorageUtil.getStorageDirectory() + #end "modsList.txt"));
 			var foundTheTop = false;
 			for (i in list)
 			{

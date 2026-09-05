@@ -129,8 +129,8 @@ jobs:
           tag_name: "release-${{ needs.get-commit-hash.outputs.commit_hash }}"
           make_latest: true
           files: |
-            /home/runner/*-Windows-PNG.apk
+            /home/runner/*-Windows-PNG.zip
             /home/runner/*-png.ipa
+            /home/runner/*-png.apk
             /home/runner/*-astc.apk
             /home/runner/*-astc.ipa
-            /home/runner/*-png.zip

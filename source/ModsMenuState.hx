@@ -3,6 +3,10 @@ package;
 #if DISCORD_ALLOWED
 import Discord.DiscordClient;
 #end
+import openfl.net.FileReference;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.net.FileFilter;
 import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -26,6 +30,7 @@ import openfl.geom.Rectangle;
 import flixel.ui.FlxButton;
 import flixel.FlxBasic;
 import funk.PsychFile as File;
+import haxe.io.Bytes;
 import haxe.zip.Reader;
 import haxe.zip.Entry;
 import haxe.zip.Uncompress;
@@ -254,7 +259,7 @@ class ModsMenuState extends MusicBeatState
 		visibleWhenHasMods.push(buttonEnableAll);
 
 		// more buttons
-		var startX:Int = 1100;
+		var startX:Int = 300;
 	
 		installButton = new FlxButton(startX, 620, "Install Mod", function()
 		{
@@ -659,34 +664,65 @@ class ModsMenuState extends MusicBeatState
 	}
 
 	function onLoadComplete(_):Void
-	{
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
-		_file.removeEventListener(Event.CANCEL, onLoadCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+    {
+        _file.removeEventListener(Event.SELECT, onLoadComplete);
+        _file.removeEventListener(Event.CANCEL, onLoadCancel);
+        _file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 
-		var fullPath:String = null;
-		@:privateAccess
-		if(_file.__path != null) fullPath = _file.__path;
+        var fullPath:String = null;
+        @:privateAccess
+        if(_file.__path != null) fullPath = _file.__path;
 
-		if(fullPath != null)
-		{
-			var rawZip:String = File.getContent(fullPath);
-			if(rawZip != null)
-			{
-				MusicBeatState.resetState();
-				var uncompressingFile:Bytes = new Uncompress().run(File.getBytes(rawZip));
-				if (uncompressingFile.done)
-				{
-					trace('test');
-					_file = null;
-					return;
-				}
-			}
-		}
-		_file = null;
-		canExit = true;
-		trace("File couldn't be loaded! Wtf?");
-	}
+        if(fullPath != null)
+        {
+            try 
+            {
+                var rawBytes:Bytes = sys.io.File.getBytes(fullPath);
+                if(rawBytes != null)
+                {
+                    MusicBeatState.resetState();
+                    
+                    var entries = haxe.zip.Reader.readZip(new haxe.io.BytesInput(rawBytes));
+                    for (entry in entries)
+                    {
+                        #if mobile
+                        var targetPath = StorageUtil.getStorageDirectory() + "mods/" + entry.fileName;
+                        #else
+                        var targetPath = "mods/" + entry.fileName;
+                        #end
+
+                        if (StringTools.endsWith(entry.fileName, "/"))
+                        {
+                            sys.FileSystem.createDirectory(targetPath);
+                        }
+                        else
+                        {
+                            var dir = haxe.io.Path.directory(targetPath);
+                            if (!sys.FileSystem.exists(dir))
+                            {
+                                sys.FileSystem.createDirectory(dir);
+                            }
+                            
+                            var fileData = haxe.zip.Reader.unzip(entry);
+                            sys.io.File.saveBytes(targetPath, fileData);
+                        }
+                    }
+
+                    trace('Successfully extracted zip!');
+                    _file = null;
+                    return;
+                }
+            } 
+            catch (e:Dynamic) 
+            {
+                trace("Error loading mod file: " + e);
+                _file = null;
+            }
+        }
+        _file = null;
+        canExit = true;
+        trace("File couldn't be loaded! Wtf?");
+    }
 
 	function onLoadCancel(_):Void
 	{
