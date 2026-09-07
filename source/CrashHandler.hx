@@ -41,18 +41,22 @@ class CrashHandler
 	{
 		var oldTrace = haxe.Log.trace;
 
-		if (!FileSystem.exists(#if mobile getStorageDirectory + #end 'traces'))
-			FileSystem.createDirectory(#if mobile getStorageDirectory + #end 'traces');
+		var storagePath = #if mobile StorageUtil.getStorageDirectory() + #end 'traces/';
 
-		traceFilePath = (#if mobile getStorageDirectory + #end 'traces/'
-			+ Date.now().toString().replace(' ', '-').replace(':', "'")
-			+ '_session.txt');
+		if (!FileSystem.exists(storagePath))
+			FileSystem.createDirectory(storagePath);
+
+		traceFilePath = storagePath + Date.now().toString().replace(' ', '-').replace(':', "'") + '_session.txt';
 
 		haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos)
 		{
 			oldTrace(v, infos);
-			
-			var methodInfo = (infos != null) ? '${infos.className}.${infos.methodName} (line ${infos.line})' : 'Unknown position';
+
+			var methodInfo = "Unknown position";
+			if (infos != null)
+			{
+				methodInfo = '${infos.className}.${infos.methodName} (line ${infos.line})';
+			}
 			var traceContent = '[$methodInfo] $v\n';
 
 			appendTraceMessage(traceContent);
@@ -151,13 +155,15 @@ class CrashHandler
 	{
 		try
 		{
-			if (!FileSystem.exists(#if mobile getStorageDirectory + #end 'logs'))
-				FileSystem.createDirectory(#if mobile getStorageDirectory + #end 'logs');
+			var storagePath = #if mobile StorageUtil.getStorageDirectory() + #end 'logs/';
 
-			File.saveContent('logs/'
+			if (!FileSystem.exists(storagePath))
+				FileSystem.createDirectory(storagePath);
+
+			sys.io.File.saveContent(storagePath
 				+ Date.now().toString().replace(' ', '-').replace(':', "'")
 				+ '.txt',
-				 message);
+				message);
 		}
 		catch (e:haxe.Exception)
 			trace('Couldn\'t save error message. (${e.message})');
