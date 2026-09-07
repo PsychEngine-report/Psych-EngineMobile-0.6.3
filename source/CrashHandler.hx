@@ -6,17 +6,22 @@ import openfl.errors.Error;
 #if sys
 import funk.PsychFileSystem as FileSystem;
 import funk.PsychFile as File;
+import sys.io.File;
 #end
 
 using StringTools;
 using flixel.util.FlxArrayUtil;
 
 /**
- * Crash Handler.
+ * Crash Handler & Custom Trace Logger.
  * @author YoshiCrafter29, Ne_Eo, MAJigsaw77 and Lily Ross (mcagabe19)
  */
 class CrashHandler
 {
+	#if sys
+	private static var traceFilePath:String = null;
+	#end
+
 	public static function init():Void
 	{
 		openfl.Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
@@ -25,7 +30,50 @@ class CrashHandler
 		#elseif hl
 		hl.Api.setErrorHandler(onError);
 		#end
+
+		#if sys
+		initCustomTrace();
+		#end
 	}
+
+	#if sys
+	private static function initCustomTrace():Void
+	{
+		var oldTrace = haxe.Log.trace;
+
+		if (!FileSystem.exists(#if mobile getStorageDirectory + #end 'traces'))
+			FileSystem.createDirectory(#if mobile getStorageDirectory + #end 'traces');
+
+		traceFilePath = (#if mobile getStorageDirectory + #end 'traces/'
+			+ Date.now().toString().replace(' ', '-').replace(':', "'")
+			+ '_session.txt');
+
+		haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos)
+		{
+			oldTrace(v, infos);
+			
+			var methodInfo = (infos != null) ? '${infos.className}.${infos.methodName} (line ${infos.line})' : 'Unknown position';
+			var traceContent = '[$methodInfo] $v\n';
+
+			appendTraceMessage(traceContent);
+		};
+	}
+
+	private static function appendTraceMessage(message:String):Void
+	{
+		try
+		{
+			if (traceFilePath != null)
+			{
+				var fout = sys.io.File.append(traceFilePath, false);
+				fout.writeString(message);
+				fout.close();
+			}
+		}
+		catch (e:haxe.Exception)
+			trace('Couldn\'t save trace message. (${e.message})');
+	}
+	#end
 
 	private static function onUncaughtError(e:UncaughtErrorEvent):Void
 	{
@@ -103,12 +151,13 @@ class CrashHandler
 	{
 		try
 		{
-			if (!FileSystem.exists('logs'))
-				FileSystem.createDirectory('logs');
+			if (!FileSystem.exists(#if mobile getStorageDirectory + #end 'logs'))
+				FileSystem.createDirectory(#if mobile getStorageDirectory + #end 'logs');
 
 			File.saveContent('logs/'
 				+ Date.now().toString().replace(' ', '-').replace(':', "'")
-				+ '.txt', message);
+				+ '.txt',
+				 message);
 		}
 		catch (e:haxe.Exception)
 			trace('Couldn\'t save error message. (${e.message})');
