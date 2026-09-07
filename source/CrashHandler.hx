@@ -55,7 +55,7 @@ class CrashHandler
 			var methodInfo = "Unknown position";
 			if (infos != null)
 			{
-				methodInfo = '${infos.className}.${infos.methodName} (line ${infos.line})';
+				methodInfo = '${infos.className}.${infos.methodName} (line ${infos.lineNumber})';
 			}
 			var traceContent = '[$methodInfo] $v\n';
 
